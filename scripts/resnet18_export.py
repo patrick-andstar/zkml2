@@ -105,7 +105,9 @@ def build(size, num_classes, seed=0):
       tag = f's{si}b{bi}'
       r_in, f_in = r, f
       r, f = conv(r, f, cout, 3, s, 1, True, f'{tag}_c1')
-      r, f = conv(r, f, cout, 3, 1, 0, False, f'{tag}_c2')
+      # torchvision pads BOTH 3x3 convs by 1; the second one keeps the spatial size
+      # produced by the first, so the residual add lines up.
+      r, f = conv(r, f, cout, 3, 1, 1, False, f'{tag}_c2')
       if s != 1 or int(r_in.shape[-1]) != cout:
         r_s, f_s = conv(r_in, f_in, cout, 1, s, 0, False, f'{tag}_sc')
       else:

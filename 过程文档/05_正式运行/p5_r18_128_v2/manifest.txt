@@ -1,0 +1,9 @@
+run_id: p5_r18_128_v2
+note: rerun after memory fix 81734ac; SRS reused from v1
+start_utc: 2026-11-15T08:56:43+00:00
+git_head: 81734ac (local)
+proving_kzg_md5: 2473e0d0459e3b5735eb7e09b656cf44
+rustc: rustc 1.102.0-nightly (8eb778d04 2026-11-12)
+model_sha256: d5794e466a9950114a305e4b9d98ed1f60f50e1e576ca02deb487dc637bc8648
+input_sha256: 9e83f5c5e89e6f873fbae446f9f5800299711954412218b7fcbc68e021aeca0c
+k=23 num_cols=10 num_random=20001 sf=512 cpus=15 mem=80GiB
