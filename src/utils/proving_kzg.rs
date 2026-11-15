@@ -109,8 +109,16 @@ pub fn time_circuit_kzg(circuit: ModelCircuit<Fr>) {
   println!("pkey size: {} bytes", pkey_size);
 
   let fill_duration = start.elapsed();
-  let proof_circuit = circuit.clone();
-  let _prover = MockProver::run(degree, &proof_circuit, vec![vec![]]).unwrap();
+  // Memory-only change, no effect on constraints, witness or the proof itself:
+  // `circuit.clone()` kept the original circuit alive for the whole of create_proof,
+  // and `_prover` kept a fully materialised MockProver (every assigned cell of a
+  // 7.5M-row circuit) alive during proving as well. At k=23 those two copies push
+  // peak RSS past an 80 GiB cgroup limit and the process gets OOM-killed. Moving
+  // the circuit in, and dropping the mock prover right away, frees both. No printed
+  // timing value changes: fill_duration was already sampled above.
+  let proof_circuit = circuit;
+  let prover = MockProver::run(degree, &proof_circuit, vec![vec![]]).unwrap();
+  drop(prover);
   let public_vals = get_public_values();
   println!(
     "Time elapsed in filling circuit: {:?}",
